@@ -60,7 +60,7 @@ fi
 echo "==> Compiling TypeScript..."
 pnpm run compile
 
-OUTPUT="file-${VERSION}.mcpack"
+OUTPUT="script-utilities-${VERSION}.mcpack"
 rm -f "$OUTPUT"
 
 echo "==> Packaging $OUTPUT..."
