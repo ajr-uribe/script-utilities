@@ -1,0 +1,16 @@
+# Local utils
+.sh/
+
+# packs
+node_modules/
+
+# compiled files
+bp/scripts/**/*.js
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Builds
+*.mcpack
+*.mcaddon

@@ -1,0 +1,23 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:block": {
+    "description": {
+      "identifier": "ajr:surround_replace",
+      "menu_category": {
+        "category": "construction"
+      }
+    },
+    "components": {
+      "ajr:surround": {
+        "all": "ajr:surround"
+      },
+      "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "stone",
+          "render_method": "opaque"
+        }
+      }
+    }
+  }
+}

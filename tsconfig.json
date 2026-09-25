@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "ES2022",
+    "target": "ES2022",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+
+    "rootDir": "./src",
+    "outDir": "./bp/scripts",
+
+    "strict": true,
+    "sourceMap": false
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

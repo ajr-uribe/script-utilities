@@ -1,0 +1,2 @@
+# CI Scripts
+.scripts/bash/build text eol=lf

@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(git rev-parse --show-toplevel 2>/dev/null || dirname "$(dirname "$(realpath "$0")")")"
+cd "$ROOT_DIR"
+
+# Resolve target package version
+if [[ -n "${VERSION:-}" ]]; then
+  echo "==> Version (inline): $VERSION"
+
+elif [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+  echo "==> Version (CI tag): $VERSION"
+
+elif [[ -t 0 ]]; then
+  read -rp "Pack Version: " VERSION
+  if [[ -z "$VERSION" ]]; then
+    echo "ERROR: empty version string" >&2
+    exit 1
+  fi
+  echo "==> Version (prompt): $VERSION"
+
+else
+  echo "ERROR: missing version. Usage: VERSION=x.x.x .scripts/bash/build.sh" >&2
+  exit 1
+fi
+
+export VERSION
+
+# Resolve offline mode preference
+if [[ -z "${OFFLINE:-}" ]] && [[ -t 0 ]]; then
+  read -rp "Install offline? [y/N]: " OFFLINE_INPUT
+  case "${OFFLINE_INPUT,,}" in
+    y|yes) OFFLINE="true" ;;
+    *)     OFFLINE="false" ;;
+  esac
+fi
+
+if [[ ! -f "bp/manifest.json" ]]; then
+  echo "ERROR: bp/manifest.json not found in $(pwd)" >&2
+  exit 1
+fi
+
+# Install dependencies with optional offline cache
+echo "==> Installing dependencies..."
+if command -v pnpm &> /dev/null; then
+  PNPM_ARGS=(--frozen-lockfile)
+  
+  if [[ "${OFFLINE:-false}" == "true" || "${OFFLINE:-0}" == "1" ]]; then
+    echo "==> Offline mode enabled. Using local pnpm store..."
+    PNPM_ARGS+=(--offline)
+  fi
+
+  pnpm install "${PNPM_ARGS[@]}"
+else
+  echo "ERROR: pnpm is not installed" >&2
+  exit 1
+fi
+
+echo "==> Compiling TypeScript..."
+pnpm run compile
+
+OUTPUT="file-${VERSION}.mcpack"
+rm -f "$OUTPUT"
+
+echo "==> Packaging $OUTPUT..."
+zip -r "$OUTPUT" bp \
+  -x "bp/**/*.map" \
+     "bp/**/*.ts" \
+     "bp/**/.DS_Store" \
+     "bp/**/Thumbs.db"
+
+echo "==> Created: $OUTPUT"
+ls -lh "$OUTPUT"
+
+# Export output filename for GitHub Actions steps
+if [[ -n "${GITHUB_ENV:-}" ]]; then
+  echo "MCPACK_FILE=$OUTPUT" >> "$GITHUB_ENV"
+fi

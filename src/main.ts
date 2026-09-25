@@ -1,0 +1,1 @@
+import './components/registry.js'

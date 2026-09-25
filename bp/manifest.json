@@ -1,0 +1,29 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Script Utilities",
+    "description": "Life is hard, hard is life :c",
+    "uuid": "f0eb43bd-3dea-46ef-9fce-05f04e5a5c46",
+    "min_engine_version": [1, 26, 0],
+    "version": [1, 0, 0]
+  },
+  "modules": [
+    {
+      "type": "script",
+      "language": "javascript",
+      "entry": "main.js",
+      "uuid": "946285ac-df8b-4eba-bba5-c4ceb6cd72c6",
+      "version": [1, 0, 0]
+    }
+  ],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.10.0"
+    }
+  ],
+  "metadata": {
+    "authors": ["ajr-uribe"],
+    "product_type": "addon"
+  }
+}
