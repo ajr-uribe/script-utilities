@@ -9,6 +9,7 @@ if [[ -n "${VERSION:-}" ]]; then
   echo "==> Version (inline): $VERSION"
 
 elif [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+  VERSION="${GITHUB_REF_NAME#v}"
   echo "==> Version (CI tag): $VERSION"
 
 elif [[ -t 0 ]]; then
@@ -20,7 +21,7 @@ elif [[ -t 0 ]]; then
   echo "==> Version (prompt): $VERSION"
 
 else
-  echo "ERROR: missing version. Usage: VERSION=x.x.x .scripts/bash/build.sh" >&2
+  echo "ERROR: missing version. Usage: VERSION=x.x.x .scripts/bash/build" >&2
   exit 1
 fi
 
@@ -44,7 +45,7 @@ fi
 echo "==> Installing dependencies..."
 if command -v pnpm &> /dev/null; then
   PNPM_ARGS=(--frozen-lockfile)
-  
+
   if [[ "${OFFLINE:-false}" == "true" || "${OFFLINE:-0}" == "1" ]]; then
     echo "==> Offline mode enabled. Using local pnpm store..."
     PNPM_ARGS+=(--offline)
